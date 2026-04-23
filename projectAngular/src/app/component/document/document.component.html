@@ -1,0 +1,84 @@
+<p-confirmDialog></p-confirmDialog>
+<p-toast></p-toast>
+
+<div class="page-wrapper">
+    <div *ngIf="pdfSrc" class="pdf-container">
+
+        <!-- Header Section -->
+        <div class="pdf-header">
+            <div class="header-content">
+                <i class="pi pi-file-pdf header-icon"></i>
+                <div class="header-text">
+                    <h2>Visualiseur de Cambiale</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls Section -->
+        <div class="controls-wrapper">
+            <div class="controls-section">
+                <!-- Print Button (Primary Action) -->
+                <div class="primary-actions">
+                    <button pButton label="Imprimer le Document" icon="pi pi-print"
+                        (click)="printCambialeOnlyData(cambialeId)" [disabled]="cambialeData?.isPrinted"
+                        class="p-button-success p-button-lg print-button">
+                    </button>
+                </div>
+
+                <!-- Zoom Controls -->
+                <div class="zoom-controls">
+                    <button pButton icon="pi pi-search-minus" (click)="decreaseZoom()"
+                        class="p-button-outlined p-button-secondary zoom-btn" pTooltip="Zoom arrière"
+                        tooltipPosition="bottom">
+                    </button>
+
+                    <div class="zoom-display">
+                        <span class="zoom-label">Zoom</span>
+                        <span class="zoom-percentage">{{ (zoom * 100).toFixed(0) }}%</span>
+                    </div>
+
+                    <button pButton icon="pi pi-search-plus" (click)="increaseZoom()"
+                        class="p-button-outlined p-button-secondary zoom-btn" pTooltip="Zoom avant"
+                        tooltipPosition="bottom">
+                    </button>
+                </div>
+
+                <!-- Page Navigation (if needed) -->
+                <div class="page-controls" *ngIf="totalPages > 1">
+                    <button pButton icon="pi pi-chevron-left" (click)="pageNumber = pageNumber > 1 ? pageNumber - 1 : 1"
+                        [disabled]="pageNumber <= 1" class="p-button-outlined p-button-secondary"
+                        pTooltip="Page précédente">
+                    </button>
+
+                    <div class="page-info">
+                        <span class="page-label">Page</span>
+                        <input type="number" [(ngModel)]="pageNumber" [min]="1" [max]="totalPages" class="page-input" />
+                        <span class="page-total">sur {{ totalPages }}</span>
+                    </div>
+
+                    <button pButton icon="pi pi-chevron-right"
+                        (click)="pageNumber = pageNumber < totalPages ? pageNumber + 1 : totalPages"
+                        [disabled]="pageNumber >= totalPages" class="p-button-outlined p-button-secondary"
+                        pTooltip="Page suivante">
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- PDF Viewer Section -->
+        <div class="pdf-viewer-wrapper">
+            <div class="pdf-viewer-container">
+                <pdf-viewer [src]="pdfSrc" [render-text]="true" [zoom]="zoom" [page]="pageNumber"
+                    (after-load-complete)="afterLoad($event)" class="pdf-viewer">
+                </pdf-viewer>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Loading State (Optional) -->
+    <div *ngIf="!pdfSrc" class="loading-container">
+        <i class="pi pi-spin pi-spinner loading-icon"></i>
+        <p>Chargement du document...</p>
+    </div>
+</div>

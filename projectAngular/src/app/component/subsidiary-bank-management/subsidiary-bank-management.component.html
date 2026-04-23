@@ -1,0 +1,75 @@
+<p-card header="Subsidiary Bank Management" class="mb-3">
+    <p-toolbar>
+        <div class="p-toolbar-group-left">
+            <button pButton label="Add Subsidiary" icon="pi pi-plus" (click)="openNew()"></button>
+        </div>
+    </p-toolbar>
+
+    <p-table [value]="subsidiaryBanks" [(selection)]="selectedSubsidiaryBank" dataKey="id">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Name</th>
+                <th>Code</th>
+                <th>Location</th>
+                <th>Actions</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-sb>
+            <tr>
+                <td>{{ sb.name }}</td>
+                <td>{{ sb.codeSubsidiary }}</td>
+                <td>{{ sb.abbreviation }}</td>
+                <td>{{ sb.location }}</td>
+                <td>
+                    <button pButton icon="pi pi-pencil" class="p-button-text" (click)="editSubsidiaryBank(sb)"
+                        pTooltip="Edit subsidiary bank" tooltipPosition="bottom"></button>
+
+                    <button pButton icon="pi pi-trash" class="p-button-text p-button-danger"
+                        (click)="confirmDeleteSubsidiaryBank(sb)" pTooltip="Delete subsidiary bank"
+                        tooltipPosition="bottom"></button>
+
+                    <button pButton icon="pi pi-wallet" class="p-button-text p-button-info" (click)="openSidebar(sb)"
+                        pTooltip="Manage accounts" tooltipPosition="bottom"></button>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</p-card>
+<p-dialog header="{{ dialogTitle }}" [(visible)]="dialogVisible" [modal]="true" [closable]="true">
+    <form #subsidiaryForm="ngForm">
+        <div class="p-fluid">
+            <div class="p-field">
+                <label for="name">Name</label>
+                <input id="name" pInputText [(ngModel)]="subsidiaryBank.name" name="name" required />
+            </div>
+
+            <div class="p-field">
+                <label for="codeSubsidiary">Code</label>
+                <div class="p-inputgroup">
+                    <span class="p-inputgroup-addon">{{ codeBank }}</span>
+                    <input id="codeSubsidiarySuffix" pInputText maxlength="3" minlength="3" [(ngModel)]="codeSuffix"
+                        [readonly]="isEdit" name="codeSubsidiarySuffix" required />
+                </div>
+                <small *ngIf="isEdit" class="p-text-secondary">Code cannot be changed when editing</small>
+            </div>
+
+
+            <div class="p-field">
+                <label for="location">Location</label>
+                <input id="location" pInputText [(ngModel)]="subsidiaryBank.location" name="location" />
+            </div>
+        </div>
+    </form>
+    <p-footer>
+        <button pButton label="Cancel" class="p-button-secondary" (click)="dialogVisible = false"></button>
+        <button pButton label="Save" (click)="saveSubsidiaryBank()" [disabled]="subsidiaryForm.invalid"></button>
+    </p-footer>
+</p-dialog>
+
+<p-confirmDialog></p-confirmDialog>
+<p-toast></p-toast>
+
+
+<p-sidebar [(visible)]="sidebarVisible" position="right" [style]="{ width: '100vw' }">
+    <app-compte-management #compteManagementComponent></app-compte-management>
+</p-sidebar>

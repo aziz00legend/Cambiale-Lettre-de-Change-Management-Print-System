@@ -1,0 +1,32 @@
+type Query {
+    getAllUsers: [UserDto]
+    getUserById(userId: ID!): UserDto
+}
+
+type Mutation {
+    saveUser(userInput: UserInput!): UserDto
+    updateUser(userId: ID!,userInput:UserInput!): Boolean
+    deleteUser(userId: ID!): Boolean
+}
+
+type UserDto {
+    id: ID
+    name: String
+    email: String
+    password: String
+    role: Role
+}
+
+enum Role {
+    USER,
+    ADMIN
+}
+
+input UserInput {
+    name: String!
+    email: String!
+    password: String!
+    role: Role!
+}
+
+

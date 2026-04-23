@@ -1,0 +1,28 @@
+extend type Query {
+    getSubsidiaryBanksByBankId(bankId: ID!): [SubsidiaryBankDto]
+    getSubsidiaryBankById(subsidiaryBankId: ID!): SubsidiaryBankDto
+}
+
+extend type Mutation {
+    addSubsidiaryBank(bankId: ID!, saveDTO: SubsidiaryBankSaveDTO!): SubsidiaryBankDto
+    updateSubsidiaryBank(subsidiaryBankId: ID!, updateDTO: SubsidiaryBankUpdateDTO!): Boolean
+    deleteSubsidiaryBank(subsidiaryBankId: ID!): Boolean
+}
+
+type SubsidiaryBankDto {
+    id: ID
+    codeSubsidiary: String
+    name: String
+    location: String
+}
+
+input SubsidiaryBankSaveDTO {
+    codeSubsidiary: String!
+    name: String!
+    location: String!
+}
+
+input SubsidiaryBankUpdateDTO {
+    name: String!
+    location: String!
+}

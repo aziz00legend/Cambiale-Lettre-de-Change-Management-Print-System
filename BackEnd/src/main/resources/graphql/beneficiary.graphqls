@@ -1,0 +1,31 @@
+extend type Query {
+    getAllBeneficiaries: [BeneficiaryDto!]!
+    getBeneficiaryById(beneficiaryId: ID!): BeneficiaryDto
+}
+
+extend type Mutation {
+    saveBeneficiary(beneficiarySaveDto: BeneficiarySaveInput!): BeneficiaryDto!
+    updateBeneficiary(beneficiaryDto: BeneficiaryUpdateInput!): Boolean!
+    deleteBeneficiary(beneficiaryId: ID!): Boolean!
+}
+
+
+type BeneficiaryDto {
+    id: ID
+    drawer: String
+    payToOrderOf: String
+}
+
+
+input BeneficiarySaveInput {
+    drawer: String!
+    payToOrderOf: String!
+}
+
+input BeneficiaryUpdateInput {
+    id: ID!
+    drawer: String!
+    payToOrderOf: String!
+}
+
+

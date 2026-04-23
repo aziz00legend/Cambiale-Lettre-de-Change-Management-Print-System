@@ -1,0 +1,266 @@
+::ng-deep .p-dialog .p-field {
+    margin-bottom: 1rem;
+}
+
+// Checkbox field styling
+.p-field-checkbox {
+    display: flex;
+    align-items: center;
+    margin-top: 1rem;
+    padding: 0.5rem 0;
+}
+
+// Account display styles for better visual distinction
+.account-item {
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+
+    &:last-child {
+        border-bottom: none;
+    }
+
+    .account-name {
+        font-weight: 600;
+        font-size: 14px;
+        color: #333;
+        margin-bottom: 4px;
+    }
+
+    .account-details {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 12px;
+
+        .rib-label {
+            background-color: #f5f5f5;
+            color: #666;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .rib-value {
+            background-color: #e3f2fd;
+            color: #1976d2;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-weight: 500;
+        }
+
+    }
+}
+
+.selected-account {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    strong {
+        color: #333;
+    }
+
+    small {
+        color: #666;
+        font-family: monospace;
+    }
+}
+
+// Enhanced autocomplete styling
+.account-autocomplete {
+    .p-autocomplete-panel {
+        .p-autocomplete-items {
+            padding: 4px;
+
+            .p-autocomplete-item {
+                padding: 8px;
+                border-radius: 4px;
+                margin-bottom: 2px;
+
+                &:hover {
+                    background-color: #f8f9fa;
+                }
+
+                &.p-highlight {
+                    background-color: #e3f2fd;
+                    color: #1976d2;
+                }
+            }
+        }
+    }
+}
+
+// Details Dialog Styles
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    gap: 1rem;
+
+    span {
+        color: #666;
+        font-style: italic;
+    }
+}
+
+.details-container {
+    .p-panel {
+        margin-bottom: 1rem;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    .detail-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        padding: 1rem 0;
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+
+            &.full-width {
+                grid-column: span 2;
+            }
+
+            label {
+                font-weight: 600;
+                color: #555;
+                font-size: 0.875rem;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            .value {
+                font-size: 1rem;
+                color: #333;
+                padding: 0.5rem 0.75rem;
+                background-color: #f8f9fa;
+                border-radius: 4px;
+                border: 1px solid #e9ecef;
+
+                &.amount {
+                    font-weight: 700;
+                    color: #28a745;
+                    font-size: 1.125rem;
+                }
+
+                &.code {
+                    font-family: 'Courier New', monospace;
+                    font-weight: 600;
+                    background-color: #e3f2fd;
+                    color: #1976d2;
+                }
+
+                &.rib {
+                    font-family: 'Courier New', monospace;
+                    font-weight: 600;
+                    letter-spacing: 1px;
+                    background-color: #fff3cd;
+                    color: #856404;
+                    word-break: break-all;
+                }
+            }
+        }
+    }
+
+    .bank-logo {
+        max-width: 200px;
+        max-height: 100px;
+        object-fit: contain;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 0.5rem;
+        background-color: white;
+    }
+}
+
+// Alternative compact display option
+.compact-account-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+
+    .left-info {
+        .account-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .account-abbr {
+            font-size: 11px;
+            color: #666;
+            margin-left: 4px;
+        }
+    }
+
+    .rib-info {
+        font-family: monospace;
+        font-size: 11px;
+        color: #888;
+        background-color: #f8f9fa;
+        padding: 2px 6px;
+        border-radius: 3px;
+    }
+}
+
+// Highlighted search results
+.search-highlight {
+    background-color: #fff3cd;
+    padding: 1px 2px;
+    border-radius: 2px;
+}
+
+// Custom styling for panels in details dialog
+::ng-deep .details-container .p-panel {
+    .p-panel-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        font-weight: 600;
+
+        .p-panel-title {
+            color: white;
+        }
+
+        .p-panel-header-icon {
+            color: white;
+        }
+    }
+
+    .p-panel-content {
+        padding: 1rem;
+        background-color: #fdfdfd;
+    }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+    .details-container .detail-grid {
+        grid-template-columns: 1fr;
+
+        .detail-item.full-width {
+            grid-column: span 1;
+        }
+    }
+}
+
+// Action buttons styling
+.p-button-text {
+    &.p-button-info {
+        color: #17a2b8;
+
+        &:hover {
+            background-color: rgba(23, 162, 184, 0.1);
+        }
+    }
+}

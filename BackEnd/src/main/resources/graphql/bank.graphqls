@@ -1,0 +1,32 @@
+extend  type Query {
+    getAllBanks: [BankDto]
+    getBankById(bankId: ID!): BankDto
+}
+
+extend  type Mutation {
+    saveBank(bankSaveInput: BankSaveInput!): BankDto
+    updateBank(bankUpdateInput: BankUpdateInput!): Boolean
+    deleteBank(bankId: ID!): Boolean
+}
+
+type BankDto {
+    id: ID
+    name: String
+    image: String
+    codeBank: String
+    abbreviation: String
+}
+
+input BankSaveInput {
+    name: String!
+    image: String
+    codeBank: String!
+    abbreviation: String!
+}
+
+input BankUpdateInput {
+    id: ID!
+    name: String!
+    image: String
+    abbreviation: String!
+}

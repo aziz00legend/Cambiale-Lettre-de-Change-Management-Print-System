@@ -1,0 +1,113 @@
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(to bottom right, #8e44ad, #3498db);
+    background-image: url("/assets/a.png");
+    background-size: cover;
+    background-position: center;
+
+}
+
+.logo-left {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 2rem;
+}
+
+.site-logo {
+    width: 50vw;
+    margin-right: 10vh;
+
+    height: auto;
+}
+
+.login-box {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 2rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    text-align: center;
+    z-index: 2;
+    min-width: 300px;
+
+    h2 {
+        color: #ffffff;
+        margin-bottom: 1rem;
+    }
+
+    .p-field {
+        margin-bottom: 1rem;
+
+        label {
+            color: #ffffff;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.5rem;
+            border: none;
+            border-radius: 5px;
+        }
+    }
+
+    .p-field-checkbox {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+
+        .forgot-password {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+    }
+
+    button {
+        width: 100%;
+        padding: 0.75rem;
+        border: none;
+        border-radius: 5px;
+        background-color: #ffffff;
+        color: #3498db;
+        font-size: 1.2rem;
+        cursor: pointer;
+
+        &:hover {
+            background-color: #f0f0f0;
+        }
+    }
+}
+
+.logo-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    opacity: 0.5;
+
+    img {
+        opacity: 0.5;
+        width: 100vw;
+        height: 100vh;
+        transition: all 1s ease-out;
+    }
+
+    .signup-button {
+        background-color: #3498db;
+    }
+
+
+
+}

@@ -1,0 +1,43 @@
+extend type Query {
+    getCompteById(id: ID!): Compte
+    getAllComptes:[Compte!]!
+    getComptesBySubsidiaryBankId(subsidiaryBankId: ID!): [Compte!]!
+
+
+}
+
+extend type Mutation {
+    addCompte(subsidiaryBankId: ID!, input: CompteSaveInput!): Compte
+    updateCompte(compteId: ID!, input: CompteUpdateInput!): Boolean
+    deleteCompte(compteId: ID!): Boolean
+}
+
+
+type Compte {
+    id: ID!
+    rib: String!
+    name: String!
+    cin: String!
+    city: String!
+    location: String!
+    codePostal: String!
+}
+
+input CompteSaveInput {
+    rib: String!
+    name: String!
+    cin: String!
+    city: String!
+    location: String!
+    codePostal: String!
+}
+
+input CompteUpdateInput {
+    name: String!
+    cin: String!
+    city: String!
+    location: String!
+    codePostal: String!
+}
+
+

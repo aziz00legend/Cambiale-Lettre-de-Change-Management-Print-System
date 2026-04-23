@@ -1,0 +1,87 @@
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    background-color: #12172b;
+    padding: 10px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    transition: width 0.3s ease;
+    overflow: hidden;
+}
+
+.sidebar.collapsed {
+    width: 60px;
+}
+
+.sidebar.collapsed .nav-list p {
+    display: none;
+}
+
+#menu {
+    padding: 10px;
+    height: 35px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+#logo-img {
+    margin-left: 10px;
+    width: 50%;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.nav-list li {
+    margin-bottom: 10px;
+    height: 40px;
+}
+
+.nav-list li a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    font-size: 1rem;
+    color: #ffffff;
+    padding: 10px;
+    border-radius: 8px;
+    height: 100%;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.nav-list li a i {
+    font-size: 1.2rem;
+    width: 30px;
+    text-align: center;
+}
+
+.nav-list li a p {
+    margin-left: 10px;
+    flex: 1;
+}
+
+.nav-list li.active a {
+    background-color: #0062ff;
+    color: #ffffff;
+}
+
+.nav-list li a:hover {
+    background-color: #1a1f36;
+    color: #d6d6d6;
+}

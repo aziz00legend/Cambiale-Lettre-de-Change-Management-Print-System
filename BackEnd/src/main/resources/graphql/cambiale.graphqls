@@ -1,0 +1,92 @@
+
+extend type Mutation {
+    addCambiale(dto: CambialeSaveDto!): CambialeDto
+    markAsPrinted(id: ID!): String
+    deleteCambiale(id: ID!): String
+}
+
+extend type Query {
+    getCambialeById(id: ID!): CambialeDtoDetail
+    getCambialesByCompteId(compteId: ID!): [CambialeDto!]!
+    getCambialesByBeneficiaryId(beneficiaryId: ID!):[CambialeDto!]!
+    getCambiales: [CambialeDto!]!
+}
+input CambialeSaveDto {
+    amount: Float!
+    operationDate: String!
+    protestable: Boolean!
+    creationLocation: TunisianGovernorate!
+    referenceCode: String!
+    beneficiaryId: ID!
+    donorAccountId: ID!
+}
+
+
+type CambialeDto {
+    id: ID!
+    amount: Float!
+    creationDateFr: String!
+    operationDateFr: String!
+    protestable: Boolean!
+    creationLocation: TunisianGovernorate!
+    referenceCode: ID!
+    isPrinted: Boolean!
+}
+
+type CambialeDtoDetail {
+    id: ID!
+    amount: Float!
+    amountInLetters: String!
+    creationDateFr: String!
+    operationDateFr: String!
+    protestable: Boolean!
+    creationLocation: TunisianGovernorate!
+    referenceCode: ID!
+    isPrinted: Boolean!
+
+    nameBank: String
+    imageBank: String
+    codeBank: String
+    abbreviationBank: String
+
+    codeSubsidiary: String
+    nameSubsidiary: String
+    locationSubsidiary: String
+
+    beneficiaryDrawer: String
+    beneficiaryPayToOrderOf: String
+
+    donorAccountRib: String
+    donorAccountName: String
+    donorCin: String
+    donorCity: String
+    donorLocation: String
+    donorCodePostal: String
+}
+
+enum TunisianGovernorate {
+    ARIANA
+    TUNIS
+    BEJA
+    BEN_AROUSS
+    BIZERTE
+    GABES
+    GAFSA
+    JENDOUBA
+    KAIROUAN
+    KASSERINE
+    KEBILI
+    KEF
+    MAHDIA
+    MANOUBA
+    MEDENINE
+    MONASTIR
+    NABEUL
+    SFAX
+    SIDI_BOUZID
+    SILIANA
+    SOUSSE
+    TOZEUR
+    TATAOUINE
+    ZAGHOUAN
+}

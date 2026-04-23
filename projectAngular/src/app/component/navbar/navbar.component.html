@@ -1,0 +1,37 @@
+<div class="sidebar" [ngClass]="{'collapsed': !isExpanded}">
+    <div class="logo">
+        <img src="../../assets/menu.png" id="menu" alt="menu" (click)="toggleSidebar()">
+        <img src="../../assets/Logo.png" id="logo-img" alt="Logo page">
+    </div>
+
+    <ul class="nav-list">
+        <li [ngClass]="{ 'active': isActive('/inside/home') }">
+            <a [routerLink]="['/inside/home']">
+                <i class="pi pi-home"></i>
+                <p>Home</p>
+            </a>
+        </li>
+
+        <li [ngClass]="{ 'active': isActive('/inside/Bank') }">
+            <a [routerLink]="['/inside/Bank']">
+                <i class="pi pi-building"></i>
+                <p>Bank</p>
+            </a>
+        </li>
+
+        <li [ngClass]="{ 'active': isActive('/beneficiaries') }">
+            <a [routerLink]="['/inside/beneficiaries']">
+                <!-- Use an appropriate icon for beneficiaries -->
+                <i class="pi pi-user-plus"></i>
+                <p>Beneficiaries</p>
+            </a>
+        </li>
+
+        <li [ngClass]="{ 'active': isActive('/inside/Cambiale') }">
+            <a [routerLink]="['/inside/Cambiale']">
+                <i class="pi pi-money-bill"></i>
+                <p>Cambiale</p>
+            </a>
+        </li>
+    </ul>
+</div>

@@ -1,0 +1,299 @@
+<p-toolbar>
+    <button pButton label="Add Cambiale" icon="pi pi-plus" (click)="openDialog()"></button>
+</p-toolbar>
+
+<p-table [value]="cambiales" dataKey="id" responsiveLayout="scroll">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>Ref</th>
+            <th>Amount</th>
+            <th>Operation Date</th>
+            <th>Protestable</th>
+            <th>Location</th>
+            <th>Printed</th>
+            <th>Actions</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-cambiale>
+        <tr>
+            <td>{{ cambiale.referenceCode }}</td>
+            <td>{{ cambiale.amount | number: '1.2-2' }}</td>
+            <td>{{ cambiale.operationDateFr }}</td>
+            <td>
+                <p-tag [value]="cambiale.protestable ? '✅ Yes' : '❌ No'"
+                    [severity]="cambiale.protestable ? 'success' : 'warning'"></p-tag>
+            </td>
+            <td>{{ formatGovernorate(cambiale.creationLocation) }}</td>
+            <td>
+                <p-tag [value]="cambiale.isPrinted ? '✅ Yes' : '❌ No'"
+                    [severity]="cambiale.isPrinted ? 'success' : 'danger'"></p-tag>
+            </td>
+            <td>
+                <button pButton icon="pi pi-eye" class="p-button-text p-button-info"
+                    (click)="openDetailsDialog(cambiale.id)" pTooltip="View details" tooltipPosition="bottom"
+                    style="margin-right: 5px;">
+                </button>
+
+                <button pButton icon="pi pi-trash" class="p-button-text p-button-danger"
+                    (click)="deleteCambiale(cambiale.id)" pTooltip="Delete cambiale" tooltipPosition="bottom"
+                    [disabled]="cambiale.isPrinted">
+                </button>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
+
+<!-- Add Cambiale Dialog -->
+<p-dialog header="Add Cambiale" [(visible)]="dialogVisible" [modal]="true" [closable]="true" [style]="{width: '600px'}">
+    <form (ngSubmit)="saveCambiale()">
+        <div class="p-fluid">
+
+            <div class="p-field">
+                <label>Operation Date</label>
+                <p-calendar [(ngModel)]="selectedDate" name="operationDate" required showIcon appendTo="body"
+                    dateFormat="yy-mm-dd" [minDate]="today"></p-calendar>
+            </div>
+
+            <div class="p-field">
+                <label>Donor Account</label>
+                <p-autoComplete [(ngModel)]="selectedDonor" [suggestions]="filteredDonors"
+                    (completeMethod)="filterDonors($event)" field="display" name="donor" [forceSelection]="true"
+                    [dropdown]="true" styleClass="account-autocomplete">
+
+                    <ng-template let-account pTemplate="item">
+                        <div class="account-item">
+                            <div class="account-name">{{ account.name }}</div>
+                            <div class="account-details">
+                                <span class="rib-label">RIB:</span>
+                                <span class="rib-value">{{ account.rib }}</span>
+
+                            </div>
+                        </div>
+                    </ng-template>
+
+                    <ng-template let-account pTemplate="selectedItem">
+                        <div class="selected-account">
+                            <strong>{{ account.name }}</strong>
+                            <small> ({{ account.abbreviation }})</small>
+                        </div>
+                    </ng-template>
+                </p-autoComplete>
+            </div>
+
+            <div class="p-field">
+                <label>Beneficiary</label>
+                <p-autoComplete [(ngModel)]="selectedBeneficiary" [suggestions]="filteredBeneficiaries"
+                    (completeMethod)="filterBeneficiaries($event)" field="display" name="beneficiary"
+                    [forceSelection]="true" [dropdown]="true" styleClass="account-autocomplete">
+
+                    <ng-template let-beneficiary pTemplate="item">
+                        <div class="account-item">
+                            <div class="account-name">{{ beneficiary.drawer }}</div>
+                            <div class="account-details">
+                                <span class="rib-display" *ngIf="beneficiary.payToOrderOf">
+                                    Pay to: {{ beneficiary.payToOrderOf }}
+                                </span>
+                            </div>
+                        </div>
+                    </ng-template>
+
+                    <ng-template let-beneficiary pTemplate="selectedItem">
+                        <div class="selected-account">
+                            <strong>{{ beneficiary.drawer }}</strong>
+                            <small *ngIf="beneficiary.payToOrderOf"> ({{ beneficiary.payToOrderOf }})</small>
+                        </div>
+                    </ng-template>
+                </p-autoComplete>
+            </div>
+
+            <div class="p-field">
+                <label>Creation Location</label>
+                <p-autoComplete [(ngModel)]="selectedGovernorate" [suggestions]="filteredGovernorates"
+                    (completeMethod)="filterGovernorates($event)" field="label" name="governorate"
+                    [forceSelection]="true" [dropdown]="true" placeholder="Search governorate...">
+
+                    <ng-template let-gov pTemplate="item">
+                        <div style="padding: 8px;">{{ gov.label }}</div>
+                    </ng-template>
+
+                    <ng-template let-gov pTemplate="selectedItem">
+                        <div>{{ gov.label }}</div>
+                    </ng-template>
+                </p-autoComplete>
+            </div>
+
+            <div class="p-field">
+                <label>Amount</label>
+                <p-inputNumber [(ngModel)]="newCambiale.amount" name="amount" mode="decimal" min="1" required />
+            </div>
+
+            <div class="p-field">
+                <label>Reference Code</label>
+                <input type="text" pInputText [(ngModel)]="newCambiale.referenceCode" name="referenceCode" required />
+            </div>
+
+            <div class="p-field-checkbox">
+                <p-checkbox [(ngModel)]="newCambiale.protestable" name="protestable" binary="true"
+                    inputId="protestable"></p-checkbox>
+                <label for="protestable" style="margin-left: 8px;">Protestable</label>
+            </div>
+
+        </div>
+        <p-footer>
+            <button pButton type="submit" label="Save"
+                [disabled]="!newCambiale.amount || !selectedDonor || !selectedBeneficiary || !selectedDate || !newCambiale.referenceCode || !selectedGovernorate"></button>
+        </p-footer>
+    </form>
+</p-dialog>
+
+<!-- Cambiale Details Dialog -->
+<p-dialog header="Cambiale Details" [(visible)]="detailsDialogVisible" [modal]="true" [closable]="true"
+    [style]="{width: '800px', maxHeight: '90vh'}" (onHide)="closeDetailsDialog()">
+
+    <div *ngIf="loadingDetails" class="loading-container">
+        <p-progressSpinner [style]="{width: '30px', height: '30px'}"></p-progressSpinner>
+        <span>Loading details...</span>
+    </div>
+
+    <div *ngIf="!loadingDetails && selectedCambialeDetails" class="details-container">
+
+        <!-- Basic Information -->
+        <p-panel header="Basic Information" [toggleable]="true" [collapsed]="false">
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <label>Reference Code:</label>
+                    <span class="value">{{ selectedCambialeDetails.referenceCode }}</span>
+                </div>
+                <div class="detail-item">
+                    <label>Amount:</label>
+                    <span class="value amount">{{ selectedCambialeDetails.amount | currency:'TND':'symbol':'1.2-2'
+                        }}</span>
+                </div>
+                <div class="detail-item full-width" *ngIf="selectedCambialeDetails.amountInLetters">
+                    <label>Amount in Letters:</label>
+                    <span class="value">{{ selectedCambialeDetails.amountInLetters }}</span>
+                </div>
+                <div class="detail-item">
+                    <label>Creation Date:</label>
+                    <span class="value">{{ selectedCambialeDetails.creationDateFr }}</span>
+                </div>
+                <div class="detail-item">
+                    <label>Operation Date:</label>
+                    <span class="value">{{ selectedCambialeDetails.operationDateFr }}</span>
+                </div>
+                <div class="detail-item">
+                    <label>Protestable:</label>
+                    <p-tag [value]="selectedCambialeDetails.protestable ? 'Yes' : 'No'"
+                        [severity]="selectedCambialeDetails.protestable ? 'success' : 'warning'"></p-tag>
+                </div>
+                <div class="detail-item">
+                    <label>Creation Location:</label>
+                    <span class="value">{{ formatGovernorate(selectedCambialeDetails.creationLocation) }}</span>
+                </div>
+                <div class="detail-item">
+                    <label>Printed Status:</label>
+                    <p-tag [value]="selectedCambialeDetails.isPrinted ? 'Printed' : 'Not Printed'"
+                        [severity]="selectedCambialeDetails.isPrinted ? 'success' : 'danger'"></p-tag>
+                </div>
+            </div>
+        </p-panel>
+
+        <!-- Bank Information -->
+        <p-panel header="Bank Information" [toggleable]="true" [collapsed]="false"
+            *ngIf="selectedCambialeDetails.nameBank">
+            <div class="detail-grid">
+                <div class="detail-item" *ngIf="selectedCambialeDetails.nameBank">
+                    <label>Bank Name:</label>
+                    <span class="value">{{ selectedCambialeDetails.nameBank }}</span>
+                </div>
+                <div class="detail-item" *ngIf="selectedCambialeDetails.codeBank">
+                    <label>Bank Code:</label>
+                    <span class="value code">{{ selectedCambialeDetails.codeBank }}</span>
+                </div>
+                <div class="detail-item" *ngIf="selectedCambialeDetails.abbreviationBank">
+                    <label>Bank Abbreviation:</label>
+                    <span class="value">{{ selectedCambialeDetails.abbreviationBank }}</span>
+                </div>
+                <div class="detail-item full-width" *ngIf="selectedCambialeDetails.imageBank">
+                    <label>Bank Logo:</label>
+                    <img [src]="selectedCambialeDetails.imageBank" alt="Bank Logo" class="bank-logo">
+                </div>
+            </div>
+        </p-panel>
+
+        <!-- Subsidiary Information -->
+        <p-panel header="Subsidiary Information" [toggleable]="true" [collapsed]="false"
+            *ngIf="selectedCambialeDetails.nameSubsidiary">
+            <div class="detail-grid">
+                <div class="detail-item" *ngIf="selectedCambialeDetails.nameSubsidiary">
+                    <label>Subsidiary Name:</label>
+                    <span class="value">{{ selectedCambialeDetails.nameSubsidiary }}</span>
+                </div>
+                <div class="detail-item" *ngIf="selectedCambialeDetails.codeSubsidiary">
+                    <label>Subsidiary Code:</label>
+                    <span class="value code">{{ selectedCambialeDetails.codeSubsidiary }}</span>
+                </div>
+                <div class="detail-item" *ngIf="selectedCambialeDetails.locationSubsidiary">
+                    <label>Location:</label>
+                    <span class="value">{{ selectedCambialeDetails.locationSubsidiary }}</span>
+                </div>
+            </div>
+        </p-panel>
+
+        <!-- Beneficiary Information -->
+        <p-panel header="Beneficiary Information" [toggleable]="true" [collapsed]="false"
+            *ngIf="selectedCambialeDetails.beneficiaryDrawer">
+            <div class="detail-grid">
+                <div class="detail-item" *ngIf="selectedCambialeDetails.beneficiaryDrawer">
+                    <label>Drawer:</label>
+                    <span class="value">{{ selectedCambialeDetails.beneficiaryDrawer }}</span>
+                </div>
+                <div class="detail-item" *ngIf="selectedCambialeDetails.beneficiaryPayToOrderOf">
+                    <label>Pay to Order Of:</label>
+                    <span class="value">{{ selectedCambialeDetails.beneficiaryPayToOrderOf }}</span>
+                </div>
+            </div>
+        </p-panel>
+
+        <!-- Donor Information -->
+        <p-panel header="Donor Information" [toggleable]="true" [collapsed]="false"
+            *ngIf="selectedCambialeDetails.donorAccountName">
+            <div class="detail-grid">
+                <div class="detail-item" *ngIf="selectedCambialeDetails.donorAccountName">
+                    <label>Account Name:</label>
+                    <span class="value">{{ selectedCambialeDetails.donorAccountName }}</span>
+                </div>
+                <div class="detail-item full-width" *ngIf="selectedCambialeDetails.donorAccountRib">
+                    <label>RIB:</label>
+                    <span class="value rib">{{ selectedCambialeDetails.donorAccountRib }}</span>
+                </div>
+                <div class="detail-item" *ngIf="selectedCambialeDetails.donorCin">
+                    <label>CIN:</label>
+                    <span class="value code">{{ selectedCambialeDetails.donorCin }}</span>
+                </div>
+                <div class="detail-item" *ngIf="selectedCambialeDetails.donorCity">
+                    <label>City:</label>
+                    <span class="value">{{ selectedCambialeDetails.donorCity }}</span>
+                </div>
+                <div class="detail-item" *ngIf="selectedCambialeDetails.donorLocation">
+                    <label>Location:</label>
+                    <span class="value">{{ selectedCambialeDetails.donorLocation }}</span>
+                </div>
+                <div class="detail-item" *ngIf="selectedCambialeDetails.donorCodePostal">
+                    <label>Postal Code:</label>
+                    <span class="value code">{{ selectedCambialeDetails.donorCodePostal }}</span>
+                </div>
+            </div>
+        </p-panel>
+    </div>
+
+    <p-footer>
+        <button pButton label="Close" icon="pi pi-times" (click)="closeDetailsDialog()"></button>
+        <button pButton [label]="selectedCambialeDetails?.isPrinted ? 'Preview' : 'Print'"
+            [icon]="selectedCambialeDetails?.isPrinted ? 'pi pi-eye' : 'pi pi-print'" class="p-button-success"
+            [routerLink]="['/cambiale/print', selectedCambialeDetails?.id]" style="margin-left: 10px;">
+        </button>
+    </p-footer>
+</p-dialog>
+
+<p-toast></p-toast>

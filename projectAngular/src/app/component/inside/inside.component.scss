@@ -1,0 +1,13 @@
+.content {
+    margin-left: 250px;
+    /* Set margin for expanded state */
+    padding: 20px;
+    /* Add padding for content */
+    transition: margin-left 0.3s ease;
+    /* Smooth transition */
+}
+
+.content.collapsed {
+    margin-left: 60px;
+    /* Adjust based on sidebar collapsed width */
+}

@@ -1,0 +1,151 @@
+<div class="beneficiary-container">
+    <div class="header-card">
+        <div class="header-content">
+            <div class="title-section">
+                <i class="pi pi-users header-icon"></i>
+                <div>
+                    <h2 class="page-title">Beneficiary Management</h2>
+                    <p class="page-subtitle">Manage your beneficiary information</p>
+                </div>
+            </div>
+            <div class="header-stats">
+                <div class="stat-item">
+                    <span class="stat-value">{{ filteredBeneficiaries.length }}</span>
+                    <span class="stat-label">Total Beneficiaries</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-card">
+        <!-- SEARCH AND ACTION BAR -->
+        <div class="toolbar">
+            <div class="search-container">
+                <i class="pi pi-search search-icon"></i>
+                <input type="text" pInputText placeholder="Search by drawer or pay to order of..."
+                    [(ngModel)]="searchTerm" (input)="filterList()" class="search-input" />
+                <button *ngIf="searchTerm" pButton icon="pi pi-times" class="p-button-text p-button-rounded clear-btn"
+                    (click)="searchTerm = ''; filterList()" pTooltip="Clear search"></button>
+            </div>
+
+            <button pButton label="Add Beneficiary" icon="pi pi-plus" class="add-button" (click)="openNew()"></button>
+        </div>
+
+        <!-- TABLE -->
+        <div class="table-wrapper">
+            <p-table [value]="filteredBeneficiaries" [paginator]="true" [rows]="10"
+                [rowsPerPageOptions]="[5, 10, 20, 50]" [showCurrentPageReport]="true"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                responsiveLayout="scroll" styleClass="beneficiary-table">
+
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th class="col-drawer">
+                            <div class="header-cell">
+                                <i class="pi pi-user"></i>
+                                <span>Drawer</span>
+                            </div>
+                        </th>
+                        <th class="col-payto">
+                            <div class="header-cell">
+                                <i class="pi pi-money-bill"></i>
+                                <span>Pay To Order Of</span>
+                            </div>
+                        </th>
+                        <th class="col-actions">
+                            <div class="header-cell">
+                                <i class="pi pi-cog"></i>
+                                <span>Actions</span>
+                            </div>
+                        </th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-b let-rowIndex="rowIndex">
+                    <tr class="table-row">
+                        <td class="col-drawer">
+                            <div class="drawer-cell">
+                                <div class="avatar">{{ b.drawer?.charAt(0)?.toUpperCase() || 'B' }}</div>
+                                <span class="drawer-name">{{ b.drawer }}</span>
+                            </div>
+                        </td>
+                        <td class="col-payto">
+                            <span class="payto-badge" *ngIf="b.payToOrderOf">
+                                <i class="pi pi-arrow-right"></i>
+                                {{ b.payToOrderOf }}
+                            </span>
+                            <span class="empty-text" *ngIf="!b.payToOrderOf">—</span>
+                        </td>
+                        <td class="col-actions">
+                            <div class="action-buttons">
+                                <button pButton icon="pi pi-pencil"
+                                    class="p-button-rounded p-button-text action-btn edit-btn" (click)="openEdit(b)"
+                                    pTooltip="Edit beneficiary" tooltipPosition="top"></button>
+                                <button pButton icon="pi pi-trash"
+                                    class="p-button-rounded p-button-text action-btn delete-btn" (click)="delete(b)"
+                                    pTooltip="Delete beneficiary" tooltipPosition="top"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="3">
+                            <div class="empty-state">
+                                <i class="pi pi-inbox empty-icon"></i>
+                                <h3>No Beneficiaries Found</h3>
+                                <p>{{ searchTerm ? 'Try adjusting your search criteria' : 'Get started by adding your
+                                    first beneficiary' }}</p>
+                                <button pButton label="Add Beneficiary" icon="pi pi-plus" class="p-button-outlined"
+                                    (click)="openNew()"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
+
+<!-- DIALOG FORM -->
+<p-dialog [(visible)]="formVisible" [modal]="true" [style]="{width: '500px'}" [draggable]="false" [closable]="true"
+    styleClass="beneficiary-dialog" [header]="editing ? 'Edit Beneficiary' : 'New Beneficiary'">
+
+    <div class="dialog-content">
+        <form [formGroup]="form" class="beneficiary-form">
+            <div class="form-group">
+                <label class="form-label required">
+                    <i class="pi pi-user"></i>
+                    Drawer
+                </label>
+                <input type="text" pInputText formControlName="drawer" class="form-input"
+                    placeholder="Enter drawer name" />
+                <small class="form-error" *ngIf="form.get('drawer')?.invalid && form.get('drawer')?.touched">
+                    Drawer is required
+                </small>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="pi pi-arrow-right"></i>
+                    Pay To Order Of
+                </label>
+                <input type="text" pInputText formControlName="payToOrderOf" class="form-input"
+                    placeholder="Enter payee name" />
+            </div>
+        </form>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <div class="dialog-footer">
+            <button pButton label="Cancel" icon="pi pi-times" class="p-button-text p-button-secondary"
+                (click)="formVisible = false"></button>
+            <button pButton [label]="editing ? 'Update' : 'Create'" [icon]="editing ? 'pi pi-check' : 'pi pi-plus'"
+                class="p-button-primary" (click)="save()" [disabled]="form.invalid"></button>
+        </div>
+    </ng-template>
+</p-dialog>
+
+<p-toast position="top-right"></p-toast>
+<p-confirmDialog styleClass="custom-confirm-dialog"></p-confirmDialog>
